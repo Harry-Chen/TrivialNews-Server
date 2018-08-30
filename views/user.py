@@ -1,6 +1,7 @@
 from flask import Blueprint
 
-from utils.auth import *
+from utils.auth_helper import *
+from utils.misc import generate_token, generate_id, hash_password
 from utils.return_result import *
 
 user = Blueprint('user', __name__)
@@ -17,7 +18,7 @@ def login() -> str:
 
         new_token = generate_token()
         new_user = {
-            '_id': generate_uid(),
+            '_id': generate_id(),
             'username': f['username'],
             'password': hash_password(f['password']),
             'token': new_token,

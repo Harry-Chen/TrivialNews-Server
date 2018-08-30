@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from utils.auth import *
+from utils.auth_helper import *
 from utils.return_result import *
 
 channel = Blueprint('channel', __name__)

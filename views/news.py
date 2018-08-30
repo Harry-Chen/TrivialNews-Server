@@ -1,7 +1,7 @@
 from flask import Blueprint
 import arrow
 
-from utils.auth import *
+from utils.auth_helper import *
 from utils.return_result import *
 
 news = Blueprint('news', __name__)
@@ -58,13 +58,14 @@ def get_news_list(login_user) -> str:
 
     for news_item in results:
         news_item['pubdate'] = news_item['pubdate'].isoformat()
-        news_item['comments_num'] = db.comments.find({
+        news_item['comment_num'] = db.comments.find({
             'news_id': news_item['_id']
         }).count()
         if 'likes' in news_item.keys():
             news_item['like_num'] = len(news_item['likes'])
             del news_item['likes']
-        news_item['like_num'] = 0
+        else:
+            news_item['like_num'] = 0
 
     return ok(results)
 
@@ -115,3 +116,37 @@ def get_news_detail(login_user) -> str:
     }
 
     return ok(news_detail)
+
+
+@news.route('/news/like', methods=['PUT', 'DELETE'])
+@require_token
+def manage_favorite(login_user) -> str:
+    user_id = login_user['_id']
+    news_id = request.json['news_id']
+
+    news_item = db.news.find_one({
+        '_id': news_id
+    })
+
+    if news_item is None:
+        return error(ErrorCause.CONTENT_NOT_EXISTED, 'News {} does not exist'.format(news_id))
+
+    if 'likes' in news_item.keys():
+        like_users = news_item['likes']
+    else:
+        like_users = []
+
+    if request.method == 'PUT':
+        if user_id not in like_users:
+            like_users.append(user_id)
+    elif request.method == 'DELETE':
+        if user_id in like_users:
+            like_users.remove(user_id)
+
+    db.news.update_one({
+        '_id': news_id
+    }, {'$set': {
+        'likes': like_users
+    }})
+
+    return ok()

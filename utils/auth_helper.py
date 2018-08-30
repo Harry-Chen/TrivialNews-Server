@@ -1,8 +1,5 @@
-import secrets
-import hashlib
 from functools import wraps
 
-import config
 from utils.error_cause import ErrorCause
 from utils.return_result import error
 from .database_helper import db
@@ -32,24 +29,3 @@ def require_token(func):
     return check_token
 
 
-def generate_token() -> str:
-    new_token = secrets.token_hex(16)
-
-    while db.users.find_one({'token': new_token}) is not None:
-        new_token = secrets.token_hex(16)
-
-    return new_token
-
-
-def generate_uid() -> int:
-    new_uid = secrets.randbits(31)
-
-    while db.users.find_one({'_id': new_uid}) is not None:
-        new_uid = secrets.randbits(31)
-
-    return new_uid
-
-
-def hash_password(password: str) -> str:
-    salted_password = password + config.PASSWORD_SALT
-    return hashlib.sha256(salted_password.encode()).hexdigest()

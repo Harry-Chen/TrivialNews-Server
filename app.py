@@ -4,11 +4,13 @@ from utils.error_cause import ErrorCause
 from .views.user import user
 from .views.channel import channel
 from .views.news import news
+from .views.comments import comments
 
 app = Flask(__name__)
 app.register_blueprint(user)
 app.register_blueprint(channel)
 app.register_blueprint(news)
+app.register_blueprint(comments)
 
 
 @app.errorhandler(Exception)

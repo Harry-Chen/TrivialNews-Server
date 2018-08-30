@@ -70,6 +70,7 @@
 | 列名    | 类型                   | 说明         |
 | ------- | ---------------------- | ------------ |
 | _id     | int                    | 评论 id      |
+| new_id  | int                    | 新闻 id      |
 | user_id | int                    | 用户 id      |
 | time    | string (ISO 8601 Time) | 评论发布日期 |
 | content | string                 | 内容         |
