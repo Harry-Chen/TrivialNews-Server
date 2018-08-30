@@ -14,7 +14,7 @@ app.register_blueprint(comments)
 
 
 @app.errorhandler(Exception)
-def key_error_handler(e: Exception) -> str:
+def error_handler(e: Exception) -> str:
     return error(ErrorCause.REQUEST_INVALID, type(e).__name__ + ": " + str(e))
 
 
