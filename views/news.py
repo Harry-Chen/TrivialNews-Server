@@ -82,6 +82,12 @@ def get_news_detail(login_user) -> str:
     if news_item is None:
         return error(ErrorCause.CONTENT_NOT_EXISTED, "News {} does not exist".format(news_id))
 
+    db.statistics.insert_one({
+        'user_id': login_user['_id'],
+        'news_id': news_id,
+        'time': arrow.utcnow().datetime
+    })
+
     comments = list(db.comments.aggregate([
         {
             '$match': {'news_id': news_item['_id']}

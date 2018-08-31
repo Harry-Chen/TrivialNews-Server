@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, make_response
 from utils.error_cause import ErrorCause
 
 
@@ -10,8 +10,8 @@ def ok(result="OK") -> str:
 
 
 def error(cause: ErrorCause, reason: str = "") -> str:
-    return jsonify({
+    return make_response(jsonify({
         "error_code": cause.value[0],
         "error_message": cause.value[1],
         "reason": reason
-    })
+    }), cause.value[2])
