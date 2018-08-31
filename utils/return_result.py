@@ -2,7 +2,9 @@ from flask import jsonify, make_response
 from utils.error_cause import ErrorCause
 
 
-def ok(result="OK") -> str:
+def ok(result=None) -> str:
+    if result is None:
+        result = {}
     return jsonify({
         "error_code": 0,
         "result": result

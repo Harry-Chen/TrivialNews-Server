@@ -19,9 +19,7 @@ def get_channel_list(login_user) -> str:
             del _channel['feed_link']
             _channel['subscribed'] = _channel['_id'] in subscribed_channels
 
-    return ok({
-        "categories": all_categories
-    })
+    return ok(all_categories)
 
 
 @channel.route('/channel/subscribe', methods=['PUT', 'DELETE'])
