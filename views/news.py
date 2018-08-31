@@ -18,25 +18,33 @@ def get_news_list(login_user) -> str:
     if request_type == 'timeline':
         if 'channel_id' in f.keys():
             query_conditions['channel_id'] = int(f['channel_id'])
-        elif 'before_time' in f.keys() and 'after_time' in f.keys():
+        else:
+            query_conditions['channel_id'] = {
+                '$in': login_user['subscription']
+            }
+
+    elif request_type == 'favorite':
+        query_conditions['_id'] = {
+            '$in': login_user['favorite']
+        }
+
+    elif request_type == 'search':
+        query_conditions['$text'] = {
+            '$search': f['query']
+        }
+        if 'before_time' in f.keys() and 'after_time' in f.keys():
             before_time = arrow.get(f['before_time']).to("UTC").datetime
             after_time = arrow.get(f['after_time']).to("UTC").datetime
             query_conditions['pubdate'] = {
                 '$gte': after_time,
                 '$lt': before_time
             }
-    elif request_type == 'favorite':
-        query_conditions['_id'] = {
-            '$in': login_user['favorite']
-        }
-    elif request_type == 'search':
-        query_conditions['$text'] = {
-            '$search': f['query']
-        }
+
     elif request_type == 'recommend':
         query_conditions['_id'] = {
             '$in': [230836507, 163220631]  # TODO: fill up here
         }
+        
     else:
         return error(ErrorCause.REQUEST_INVALID, 'Cannot get news of type ' + request_type)
 
