@@ -7,6 +7,7 @@ import requests
 import re
 import hashlib
 import pytz
+from bs4 import BeautifulSoup
 from tqdm import tqdm
 from time import mktime
 from datetime import datetime
@@ -79,11 +80,38 @@ def crawl_all_news(tz, db):
     news_col.insert_many(insert_news)
     print("Inserted {} new news in total".format(number))
 
+
+def update_news_picture(db, news):
+    try:
+        news_content = BeautifulSoup(requests.get(news['link']).text)
+        main_img = news_content.find('div', {'id': 'Main-Article-QQ'}).find('p', {'align': 'center'}).find('img')
+        img_url = main_img['src']
+        if img_url[0:2] == '//':
+            img_url = 'http:' + img_url
+    except:
+        img_url = ""
+    
+    db.update_one({
+        '_id': news['_id']
+    }, {'$set': {
+        'picture': img_url
+    }})
+
+
+def update_news_pictures(db):
+    no_pic_news = []
+    for news in db.find():
+        if 'picture' not in news.keys():
+            no_pic_news.append(news)
+    print('Currently news with no pictures: {}'.format(len(no_pic_news)))
+    for news in tqdm(no_pic_news):
+        update_news_picture(db, news)
+
 if __name__ == '__main__':
 	tz = pytz.timezone('Asia/Shanghai')
 	client = MongoClient('localhost', 27017)
 	db = client['trivial_news']
 	
 	crawl_all_news(tz, db)
-
+	update_news_pictures(db['News'])
 
