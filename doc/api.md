@@ -120,17 +120,17 @@ GET /news/list
 
 请求参数：
 
-| 名称        | 必选 | 类型                    | 说明                                       |
-| ----------- | ---- | ----------------------- | ------------------------------------------ |
-| type        | 是   | string                  | "timeline"/"favorite"/"search"/"recommend" |
-| channel_id  | 否   | int                     | 指定频道的 id                              |
-| before_time | 否   | string（ISO 8601 Time） | 最晚发布时间（不含）                       |
-| after_time  | 否   | string（ISO 8601 Time） | 最早发布时间（含）                         |
-| query       | 否   | string                  | 搜索的关键词                               |
-| count       | 否   | int                     | 每页新闻数量（默认20，最大 100）           |
-| page        | 否   | int                     | 页码（默认为0）                            |
+| 名称        | 必选 | 类型                    | 说明                                                 |
+| ----------- | ---- | ----------------------- | ---------------------------------------------------- |
+| type        | 是   | string                  | "channel"/"timeline"/"favorite"/"search"/"recommend" |
+| channel_id  | 否   | int                     | 指定频道的 id                                        |
+| before_time | 否   | string（ISO 8601 Time） | 最晚发布时间（不含）                                 |
+| after_time  | 否   | string（ISO 8601 Time） | 最早发布时间（含）                                   |
+| query       | 否   | string                  | 搜索的关键词                                         |
+| count       | 否   | int                     | 每页新闻数量（默认20，最大 100）                     |
+| page        | 否   | int                     | 页码（默认为0）                                      |
 
-四个 type 分别代表：正常时间轴，查询收藏的新闻、搜索新闻和查看推荐。如果 type 是非法的，会返回错误。在非 timeline 模式下， channel_id 是无效的。在非 search 模式下，时间限制是无效的。在 timeline 模式中，如果指定了 channel_id （即查看某个特定频道），即使用户没有订阅这个频道，也会返回消息。如果没有查询到内容，比如请求的页码超过了总的可用页码，或者收藏为空/搜索失败，会返回错误（见上）。
+五个 type 分别代表：查看某一频道、正常时间轴，查询收藏的新闻、搜索新闻和查看推荐。如果 type 是非法的，会返回错误。在非 channel 模式下， channel_id 是无效的。在非 timeline 模式下，时间限制是无效的。如果没有查询到内容，比如请求的页码超过了总的可用页码，或者收藏为空/搜索失败，会返回错误（见上）。
 
 返回值示例：
 

@@ -16,12 +16,23 @@ def get_news_list(login_user) -> str:
     request_type = f['type']
 
     if request_type == 'timeline':
-        if 'channel_id' in f.keys():
-            query_conditions['channel_id'] = int(f['channel_id'])
-        else:
-            query_conditions['channel_id'] = {
-                '$in': login_user['subscription']
-            }
+        query_conditions['channel_id'] = {
+            '$in': login_user['subscription']
+        }
+
+        if 'before_time' or 'after_time' in f.keys():
+            query_conditions['pubdate'] = {}
+
+        if 'before_time' in f.keys():
+            before_time = arrow.get(f['before_time']).to("UTC").datetime
+            query_conditions['pubdate']['$lt'] = before_time
+
+        if 'after_time' in f.keys():
+            after_time = arrow.get(f['after_time']).to("UTC").datetime
+            query_conditions['pubdate']['$gte'] = after_time
+
+    elif request_type == 'channel':
+        query_conditions['channel_id'] = int(f['channel_id'])
 
     elif request_type == 'favorite':
         query_conditions['_id'] = {
@@ -32,13 +43,6 @@ def get_news_list(login_user) -> str:
         query_conditions['$text'] = {
             '$search': f['query']
         }
-        if 'before_time' in f.keys() and 'after_time' in f.keys():
-            before_time = arrow.get(f['before_time']).to("UTC").datetime
-            after_time = arrow.get(f['after_time']).to("UTC").datetime
-            query_conditions['pubdate'] = {
-                '$gte': after_time,
-                '$lt': before_time
-            }
 
     elif request_type == 'recommend':
         query_conditions['_id'] = {
@@ -50,8 +54,6 @@ def get_news_list(login_user) -> str:
 
     if 'count' in f.keys():
         page_count = int(f['count'])
-        if not page_count <= 100:
-            page_count = 20
     else:
         page_count = 20
 
@@ -74,6 +76,12 @@ def get_news_list(login_user) -> str:
             del news_item['likes']
         else:
             news_item['like_num'] = 0
+
+        read_info = db.statistics.find_one({
+            'news_id': news_item['_id'],
+            'user_us': login_user['_id']
+        })
+        news_item['has_read'] = read_info is not None
 
     return ok(results)
 
