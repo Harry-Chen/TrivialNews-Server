@@ -20,7 +20,7 @@ def get_news_list(login_user) -> str:
             '$in': login_user['subscription']
         }
 
-        if 'before_time' or 'after_time' in f.keys():
+        if 'before_time' in f.keys() or 'after_time' in f.keys():
             query_conditions['pubdate'] = {}
 
         if 'before_time' in f.keys():
