@@ -79,7 +79,7 @@ def get_news_list(login_user) -> str:
 
         read_info = db.statistics.find_one({
             'news_id': news_item['_id'],
-            'user_us': login_user['_id']
+            'user_id': login_user['_id']
         })
         news_item['has_read'] = read_info is not None
 
