@@ -30,7 +30,11 @@ def add_comment(login_user) -> str:
 
     db.comments.insert_one(new_comment)
 
-    return ok()
+    del new_comment['user_id']
+    del new_comment['news_id']
+    new_comment['username'] = login_user['username']
+
+    return ok(new_comment)
 
 
 @comments.route('/comment', methods=['DELETE'])
