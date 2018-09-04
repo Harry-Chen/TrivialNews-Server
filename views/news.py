@@ -77,6 +77,12 @@ def get_news_list(login_user) -> str:
         else:
             news_item['like_num'] = 0
 
+        all_read_info = db.statistics.find({
+            'news_id': news_item['_id']
+        })
+
+        news_item['read_num'] = all_read_info.count()
+
         read_info = db.statistics.find_one({
             'news_id': news_item['_id'],
             'user_id': login_user['_id']
