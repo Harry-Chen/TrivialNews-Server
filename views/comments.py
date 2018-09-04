@@ -33,6 +33,7 @@ def add_comment(login_user) -> str:
     del new_comment['user_id']
     del new_comment['news_id']
     new_comment['username'] = login_user['username']
+    new_comment['time'] = new_comment['time'].isoformat()
 
     return ok(new_comment)
 
