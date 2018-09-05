@@ -7,17 +7,13 @@ channel = Blueprint('channel', __name__)
 
 
 @channel.route('/channel/list', methods=['GET'])
-@require_token
-def get_channel_list(login_user) -> str:
+def get_channel_list() -> str:
     all_categories = list(db.categories.find({}))
-
-    subscribed_channels = login_user['subscription']
 
     for category in all_categories:
         del category['link']
         for _channel in category['channels']:
             del _channel['feed_link']
-            _channel['subscribed'] = _channel['_id'] in subscribed_channels
 
     return ok(all_categories)
 

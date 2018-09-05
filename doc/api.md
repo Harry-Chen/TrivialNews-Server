@@ -63,9 +63,11 @@ POST /user/login
 
 
 
-| 名称  | 类型   | 说明                |
-| ----- | ------ | ------------------- |
-| token | string | 用户的 Access Token |
+| 名称         | 类型   | 说明                |
+| ------------ | ------ | ------------------- |
+| username     | string | 用户名称            |
+| token        | string | 用户的 Access Token |
+| subscription | int[]  | 用户订阅的频道 id   |
 
 说明：
 
@@ -79,7 +81,7 @@ POST /user/login
 GET /channel/list
 ```
 
-需要认证：是
+需要认证：否
 
 请求参数：无
 
@@ -95,20 +97,18 @@ GET /channel/list
                 "_id": 1,
                 "name": "国内新闻",
                 "description": "国内时政新闻、各地新闻及综述评论",
-                "subscribed": true
             },
             {
                 "_id": 2
                 "name": "国际新闻",
                 "description": "世界新闻报道",
-                "subscribed": false
             }
         ]
     }
 ]
 ```
 
-其中 `subscribed` 表示用户是否订阅了该频道。Category 和 Channel 的 ID 各自都是全局唯一的。
+Category 和 Channel 的 ID 各自都是全局唯一的。
 
 ## 新闻获取
 

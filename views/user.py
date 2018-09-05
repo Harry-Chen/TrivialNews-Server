@@ -28,9 +28,9 @@ def login() -> str:
 
         db.users.insert_one(new_user)
 
-        return ok({
-            "token": new_token
-        })
+        del new_user['password']
+
+        return ok(new_user)
 
     else:
 
@@ -50,9 +50,9 @@ def login() -> str:
             'token': new_token
         }})
 
-        return ok({
-            "token": new_token
-        })
+        del now_user['password']
+
+        return ok(now_user)
 
 
 @user.route('/user/favorite', methods=['PUT', 'DELETE'])
