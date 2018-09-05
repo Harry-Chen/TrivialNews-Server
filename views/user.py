@@ -51,6 +51,7 @@ def login() -> str:
             'token': new_token
         }})
 
+        now_user['token'] = new_token
         del now_user['password']
         del now_user['_id']
 

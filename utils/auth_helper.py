@@ -14,6 +14,7 @@ def require_token(func):
     def check_token(*args, **kwargs):
 
         headers = request.headers
+        print(headers)
         if auth_header_name not in headers.keys():
             return error(ErrorCause.NOT_AUTHORIZED)
 
