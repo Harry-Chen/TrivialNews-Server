@@ -29,6 +29,7 @@ def login() -> str:
         db.users.insert_one(new_user)
 
         del new_user['password']
+        del new_user['_id']
 
         return ok(new_user)
 
@@ -51,6 +52,7 @@ def login() -> str:
         }})
 
         del now_user['password']
+        del now_user['_id']
 
         return ok(now_user)
 
