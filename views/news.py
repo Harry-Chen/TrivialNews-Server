@@ -139,7 +139,6 @@ def get_news_detail(login_user) -> str:
     news_detail = {
         'like': 'likes' in news_item.keys() and login_user['_id'] in news_item['likes'],
         'favorite': news_item['_id'] in login_user['favorite'],
-        'keywords': [],  # TODO: fill up here
         'comments': comments
     }
 
