@@ -1,5 +1,6 @@
 from flask import Blueprint
 import arrow
+import jieba
 
 from utils.auth_helper import *
 from utils.return_result import *
@@ -41,7 +42,7 @@ def get_news_list(login_user) -> str:
 
     elif request_type == 'search':
         query_conditions['$text'] = {
-            '$search': f['query']
+            '$search': ' '.join(jieba.lcut(f['query']))
         }
 
     elif request_type == 'recommend':
