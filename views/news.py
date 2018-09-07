@@ -46,9 +46,12 @@ def get_news_list(login_user) -> str:
         }
 
     elif request_type == 'recommend':
-        query_conditions['_id'] = {
-            '$in': [230836507, 163220631]  # TODO: fill up here
-        }
+        if 'recommend' in login_user.keys():
+            query_conditions['_id'] = {
+                '$in': login_user['recommend']
+            }
+        else:
+            ok([])
         
     else:
         return error(ErrorCause.REQUEST_INVALID, 'Cannot get news of type ' + request_type)
