@@ -102,7 +102,7 @@ for news in tqdm(news_all):
     },{
         '$set': {
             'search_keywords': news['search_keywords'],
-            'tf_idf_words': news['tf_ifd_words'],
+            'tf_idf_words': news['tf_idf_words'],
             'keywords': news['keywords']
         }
     })
