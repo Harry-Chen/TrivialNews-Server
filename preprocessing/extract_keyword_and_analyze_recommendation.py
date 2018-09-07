@@ -21,12 +21,13 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 
+from config import *
 
 # In[2]:
 
 
 tz = pytz.timezone('Asia/Shanghai')
-client = MongoClient('localhost', 27017)
+client = MongoClient(MONGO_SERVER, MONGO_PORT)
 db = client['trivial_news']
 categories_col = db['Categories']
 channels_col = db['Channels']

@@ -7,6 +7,9 @@ import requests
 import re
 import hashlib
 import pytz
+
+from config import *
+
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 from time import mktime
@@ -109,7 +112,7 @@ def update_news_pictures(db):
 
 if __name__ == '__main__':
 	tz = pytz.timezone('Asia/Shanghai')
-	client = MongoClient('localhost', 27017)
+	client = MongoClient(MONGO_SERVER, MONGO_PORT)
 	db = client['trivial_news']
 	
 	crawl_all_news(tz, db)
