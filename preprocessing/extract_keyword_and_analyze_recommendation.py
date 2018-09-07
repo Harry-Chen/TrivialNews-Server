@@ -48,7 +48,8 @@ news_all = list(news_col.find())
 
 print('Calculating search keywords for all news')
 for news in tqdm(news_all):
-    news['search_keywords'] = jieba.lcut_for_search(news['title'] + '\n' + news['summary'])
+    if 'search_keywords' not in news.keys():
+        news['search_keywords'] = jieba.lcut_for_search(news['title'] + '\n' + news['summary'])
 
 
 # # Update news keyword by TF-IDF
@@ -58,10 +59,15 @@ for news in tqdm(news_all):
 print('Calculating TD-IDF index for all news')
 corpus = []
 for news in tqdm(news_all):
-    cut = []
-    for word, prop in jieba.posseg.cut(news['title'] + '\n' + news['summary']):
-        if (prop[0] == 'n' or prop[0] == 'N') and prop != 'n':
-            cut.append(word)
+    if 'tf_idf_words' not in news.keys():
+        cut = []
+        for word, prop in jieba.posseg.cut(news['title'] + '\n' + news['summary']):
+            if (prop[0] == 'n' or prop[0] == 'N') and prop != 'n':
+                cut.append(word)
+        news['td_idf_words'] = cut
+    else:
+        cut = news['tf_idf_words']
+
     corpus.append(' '.join(cut))
 
 
@@ -96,6 +102,7 @@ for news in tqdm(news_all):
     },{
         '$set': {
             'search_keywords': news['search_keywords'],
+            'tf_idf_words': news['tf_ifd_words'],
             'keywords': news['keywords']
         }
     })
