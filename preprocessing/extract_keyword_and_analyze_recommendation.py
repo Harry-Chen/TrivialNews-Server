@@ -46,7 +46,7 @@ news_all = list(news_col.find())
 
 # In[4]:
 
-
+print('Calculating search keywords for all news')
 for news in tqdm(news_all):
     news['search_keywords'] = jieba.lcut_for_search(news['title'] + '\n' + news['summary'])
 
@@ -55,7 +55,7 @@ for news in tqdm(news_all):
 
 # In[5]:
 
-
+print('Calculating TD-IDF index for all news')
 corpus = []
 for news in tqdm(news_all):
     cut = []
@@ -116,10 +116,7 @@ for i, news in enumerate(news_all):
 
 corpus_recommand = []
 for news in tqdm(news_all):
-    cut = []
-    for word in jieba.cut_for_search(news['title'] + '\n' + news['summary']):
-        cut.append(word)
-    corpus_recommand.append(' '.join(cut))
+    corpus_recommand.append(' '.join(news['search_keywords']))
 
 
 # In[11]:
@@ -136,6 +133,7 @@ weight_recommend=tfidf_recommend.toarray()
 
 
 def update_recommend_for_user(user_id):
+    print('Calculating recommend news for user {}'.format(user_id))
     user_read = []
     for read in list(statistics_col.find({'user_id': user_id})):
         try:
@@ -154,7 +152,6 @@ def update_recommend_for_user(user_id):
     recommend = []
     for i in np.argsort(-similarities):
         if i not in user_read:
-            print(news_all[i]['title'])
             recommend.append(news_all[i]['_id'])
             
     user_col.update_one({
