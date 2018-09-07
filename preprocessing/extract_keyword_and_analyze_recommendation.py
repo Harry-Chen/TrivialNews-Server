@@ -64,7 +64,7 @@ for news in tqdm(news_all):
         for word, prop in jieba.posseg.cut(news['title'] + '\n' + news['summary']):
             if (prop[0] == 'n' or prop[0] == 'N') and prop != 'n':
                 cut.append(word)
-        news['td_idf_words'] = cut
+        news['tf_idf_words'] = cut
     else:
         cut = news['tf_idf_words']
 
