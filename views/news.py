@@ -37,6 +37,7 @@ def get_news_list(login_user) -> str:
         query_conditions['channel_id'] = int(f['channel_id'])
 
     elif request_type == 'favorite':
+        sort_by_date = False
         query_conditions['_id'] = {
             '$in': login_user['favorite']
         }
