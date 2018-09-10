@@ -49,7 +49,6 @@ def get_news_list(login_user) -> str:
 
     elif request_type == 'recommend':
         if 'recommend' in login_user.keys():
-            sort_by_date = False
             query_conditions['_id'] = {
                 '$in': login_user['recommend']
             }
