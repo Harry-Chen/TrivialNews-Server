@@ -53,7 +53,7 @@ def get_news_list(login_user) -> str:
                 '$in': login_user['recommend']
             }
         else:
-            ok([])
+            return ok([])
 
     else:
         return error(ErrorCause.REQUEST_INVALID, 'Cannot get news of type ' + request_type)
