@@ -1,3 +1,4 @@
+import pymongo
 from flask import Blueprint
 import arrow
 import jieba
@@ -11,10 +12,10 @@ news = Blueprint('news', __name__)
 @news.route('/news/list', methods=['GET'])
 @require_token
 def get_news_list(login_user) -> str:
-
     f = request.args
     query_conditions = {}
     request_type = f['type']
+    sort_by_date = True
 
     if request_type == 'timeline':
         query_conditions['channel_id'] = {
@@ -47,12 +48,13 @@ def get_news_list(login_user) -> str:
 
     elif request_type == 'recommend':
         if 'recommend' in login_user.keys():
+            sort_by_date = False
             query_conditions['_id'] = {
                 '$in': login_user['recommend']
             }
         else:
             ok([])
-        
+
     else:
         return error(ErrorCause.REQUEST_INVALID, 'Cannot get news of type ' + request_type)
 
@@ -68,7 +70,12 @@ def get_news_list(login_user) -> str:
     else:
         page = 0
 
-    results = list(db.news.find(query_conditions).skip(page * page_count).limit(page_count))
+    cursor = db.news.find(query_conditions)
+
+    if sort_by_date:
+        cursor = cursor.sort("pubdate", pymongo.DESCENDING)
+
+    results = list(cursor.skip(page * page_count).limit(page_count))
 
     for news_item in results:
         news_item['pubdate'] = news_item['pubdate'].isoformat()
